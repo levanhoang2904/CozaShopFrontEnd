@@ -1,0 +1,321 @@
+a {
+  text-decoration: none;
+}
+
+.p-layout {
+  padding: 120px 0 50px;
+}
+
+.title {
+  margin-bottom: 5vh;
+}
+
+.card {
+  max-width: 900px;
+  width: 90%;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 1rem;
+  border: transparent;
+}
+
+.border-item {
+  border: 1px solid #d9d9d9;
+  padding: 3px 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  border: 1px solid #d9d9d9;
+  border-radius: 20px;
+}
+
+.qty-btn {
+  background: transparent;
+  border: 0;
+  outline: 0;
+  text-align: center;
+  width: 45px;
+  height: 100%;
+}
+
+.line-item-qty {
+  border: 1px solid #d9d9d9;
+  border-top: 0;
+  border-bottom: 0;
+  margin-bottom: 0;
+}
+
+.item-price {
+  color: red;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+@media (max-width: 1200px) {
+  .card {
+    margin: 3vh auto;
+  }
+
+  .p-layout {
+    padding: 50px 0 50px;
+  }
+}
+
+.cart {
+  background-color: #fff;
+  padding: 4vh 5vh;
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+}
+
+.item-height {
+  max-height: 320px;
+  overflow-y: scroll;
+}
+
+@media (max-width: 768px) {
+  .cart {
+    padding: 4vh;
+    border-bottom-left-radius: unset;
+    border-top-right-radius: 1rem;
+  }
+
+  .summary {
+    border-top-right-radius: unset;
+    border-bottom-left-radius: 1rem;
+  }
+
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .address {
+    margin: 3vh auto;
+    max-width: 900px;
+    width: 90% !important;
+  }
+}
+
+.active-mobile {
+  display: none;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .address {
+    width: 100% !important;
+  }
+
+}
+
+@media (max-width: 700px) {
+  .active-mobile {
+    display: block;
+  }
+
+  
+
+  .active-desktop {
+    display: none;
+  }
+}
+
+@media ((min-width: 1024px) and (max-width: 1199px)) {
+  .active-mobile {
+    display: block;
+  }
+
+  
+
+  .active-desktop {
+    display: none;
+  }
+}
+
+.summary {
+  background-color: #ddd;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding: 4vh;
+  color: rgb(65, 65, 65);
+}
+
+.summary .col-2 {
+  padding: 0;
+}
+
+.summary .col-10 {
+  padding: 0;
+}
+
+.row {
+  margin: 0;
+}
+
+.title b {
+  font-size: 1.5rem;
+}
+
+.main {
+  margin: 0;
+  padding: 2vh 0;
+  width: 100%;
+}
+
+.col-2,
+.col {
+  padding: 0 1vh;
+}
+
+a {
+  padding: 0 1vh;
+}
+
+.close {
+  margin-left: 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: red;
+}
+.text-sale {
+  background-color: red;
+  color: #fff !important;
+}
+.img-fluid {
+  width: 3.5rem;
+  border-radius: 2px;
+}
+
+.btn-action {
+  margin-top: 1.5rem;
+  border: 1px solid #d9d9d9;
+  padding: 3px 25px;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.btn-action:hover,
+.btn-action:focus-within {
+  background-color: #ccc;
+  color: #fff;
+}
+
+.btn-action:hover .text-muted,
+.btn-action:focus-within .text-muted {
+  color: #fff !important;
+}
+
+.btn-red {
+  border-color: red !important;
+}
+
+.btn-red:hover,
+.btn-red:focus-within {
+  background-color: red;
+}
+.btn-icon i {
+  font-size: 14px;
+}
+hr {
+  margin-top: 1.25rem;
+}
+
+form {
+  padding: 2vh 0;
+}
+
+select {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  padding: 1.5vh 1vh;
+  margin-bottom: 4vh;
+  outline: none;
+  width: 100%;
+  background-color: rgb(247, 247, 247);
+}
+
+input {
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  padding: 1vh;
+  margin-bottom: 4vh;
+  outline: none;
+  width: 100%;
+  background-color: rgb(247, 247, 247);
+}
+
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.btn-pay {
+  background-color: #000;
+  border-color: #000;
+  color: white;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 4vh;
+  padding: 1vh;
+  border-radius: 50px;
+}
+
+.btn-pay:focus {
+  box-shadow: none;
+  outline: none;
+  box-shadow: none;
+  color: white;
+  -webkit-box-shadow: none;
+  -webkit-user-select: none;
+  transition: none;
+}
+
+.btn-pay:hover {
+  color: white;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  color: black;
+  text-decoration: none;
+}
+
+#code {
+  background-image: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.253),
+      rgba(255, 255, 255, 0.185)
+    ),
+    url("https://img.icons8.com/small/16/000000/long-arrow-right.png");
+  background-repeat: no-repeat;
+  background-position-x: 95%;
+  background-position-y: center;
+}
+
+.address {
+  margin-top: 10px;
+  width: 100%;
+  height: fit-content;
+  padding: 20px;
+  padding: 0
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+
+
+

@@ -1,0 +1,125 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <main class="main" id="main">
+    <div class="pagetitle">
+      <h3>Quản lý loại sản phẩm</h3>
+      <nav class="mt-3 d-flex">
+        <div class="box box-primary w-full">
+          <div class="box-body">
+            <div class="d-flex justify-content-end">
+              <a
+                [routerLink]="['/admin/form-category']"
+                class="btn btn-primary"
+                style="margin-left: 5px"
+              >
+                <i class="fa fa-plus"></i> Bổ sung
+              </a>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <ng-container *ngIf="categories.length; else notFound">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                  <thead>
+                    <tr class="bg-primary">
+                      <th class="table-title">Tên loại sản phẩm</th>
+                      <th class="title-table">Ghi chú</th>
+                      <th class="title-table" style="width: 100px">Công cụ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let category of categories">
+                      <td>{{ category.namecategory }}</td>
+                      <td class="table-title">
+                        {{ category.note }}
+                      </td>
+                      <td class="text-right">
+                        <a
+                          [routerLink]="['/admin/form-category']"
+                          [queryParams]="{ id: category._id }"
+                          class="btn btn-xs btn-info me-2"
+                        >
+                          <i class="zmdi zmdi-edit"></i>
+                        </a>
+                        <span
+                          class="btn btn-xs btn-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal2"
+                          (click)="setCurrentIdCategory(category._id)"
+                        >
+                          <i class="zmdi zmdi-delete"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="text-center">
+                <ul class="flex-c-m flex-w w-full p-t-16">
+                  <li *ngFor="let page of pageCount">
+                    <a
+                      [ngClass]="{
+                        'active-pagination1': pageCurrent === page
+                      }"
+                      class="flex-c-m how-pagination1 page trans-04 m-all-7"
+                      (click)="setPageCurrent(page)"
+                    >
+                      {{ page }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </ng-container>
+            <ng-template #notFound>
+              <div class="p-t-38">
+                <p class="text-center fw-bold">Không có loại sản phẩm nào!!!</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal2"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Bạn có chắc chắn muốn bài viết này?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="deleteCategory()"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

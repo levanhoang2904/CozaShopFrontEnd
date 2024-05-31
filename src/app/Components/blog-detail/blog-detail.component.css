@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+
+.p-layout {
+  padding: 120px 0 50px;
+}
+
+.article-title {
+  word-wrap: break-word;
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 52px;
+  word-break: break-word;
+  color: #000;
+}
+
+.article-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 30px 0 15px;
+  color: #000;
+  text-align: justify;
+}
+
+.thumbnail {
+  width: 100%;
+  text-align: center;
+}
+
+.article-thumbnail {
+  max-height: 500px;
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.topic-tool {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.article-date {
+  font-size: 14px;
+  font-weight: 600;
+
+  background-color: #f2f4f7;
+  color: var(--gray-700, #344054);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.topic-item {
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.topic-item:hover {
+  background-color: #717fe0;
+  color: #ffff;
+}
+
+.topic-description {
+  font-style: italic;
+  font-size: 14px;
+}
+
+::ng-deep p {
+  font-weight: 400;
+}
+
+::ng-deep .image {
+  margin-top: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+::ng-deep figcaption {
+  margin-top: 5px;
+  font-style: italic;
+  font-style: 8px;
+  color: #878fac;
+}
+
+::ng-deep .image img {
+  border-radius: 5px;
+  max-width: 100%;
+  height: auto;
+}
+
+.article-text__footer {
+  text-align: center;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 1200px) {
+  .p-layout {
+    padding: 50px 15px 50px;
+  }
+}

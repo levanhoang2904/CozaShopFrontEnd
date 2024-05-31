@@ -1,0 +1,296 @@
+<!-- content -->
+<section class="py-5 product">
+  <div class="container">
+    <div class="row gx-5" style="max-width: 100%; margin-right: 0 !important; margin-left: 0 !important">
+      <aside class="col-lg-6">
+        <div class="mb-3 d-flex justify-content-center">
+          <a
+            data-fslightbox="mygalley"
+            class="rounded-4 imageMain"
+            target="_blank"
+            data-type="image"
+          >
+            <img
+              style="max-width: 100%; max-height: 100vh; margin: auto"
+              class="rounded-4 fit"
+              [src]="'https://backendqlshop-1.onrender.com/images/' + imageCurrent"
+            />
+          </a>
+        </div>
+
+        <!-- thumbs-wrap.// -->
+        <!-- gallery-wrap .end// -->
+      </aside>
+      <main class="col-lg-6">
+        <div class="ps-lg-3">
+          <h4 class="title text-dark mb-3">
+            {{ product.name }}
+          </h4>
+
+          <div class="mb-3 price_block">
+            <span class="stext-105 cl3 price" *ngIf="product.sale > 0">
+              {{
+                priceProductFormat(product.price, product.sale)
+              }} 
+            </span>
+            <span
+              class="stext-105 cl3 price"
+              [ngClass]="{ priceOld: product.sale > 0 }"
+            >
+              {{ priceProductFormat(product.price, 0) }}
+            </span>
+          </div>
+
+          <div class="row">
+            <dt class="col-3">Loại sản phẩm:</dt>
+            <dd *ngIf="product.categoryId" class="col-9">
+              {{ product.categoryId.namecategory }}
+            </dd>
+
+            <dt class="col-3">Chất liệu:</dt>
+            <dd class="col-9">{{ product.fabric }}</dd>
+          </div>
+          <hr />
+          <div class="row mb-4">
+            <div class="mb-3">
+              <div class="mb-4">
+                <span class="mb-4">Màu sắc:</span
+                ><span class="mx-4 text-primary text_color">{{
+                  colorChoose ? colorChoose : colorCurrent
+                }}</span>
+                <span *ngIf = "product.details && product.details.length === 0" class = "text-danger">Sản phẩm không có màu sắc</span>
+              </div>
+              <div class="d-flex">
+                <div
+                  *ngFor="let productDetail of product.details; index as i"
+                  class="imageColor"
+                >
+                  <button
+                    (mouseenter)="setColorCurrent(productDetail.color)"
+                    (mouseleave)="setColorCurrent('')"
+                    (click)="
+                      chooseColor(
+                        productDetail.image,
+                        productDetail.color,
+                        productDetail._id
+                      )
+                    "
+                    data-fslightbox="mygalley"
+                    class="border mx-1 rounded-2"
+                    target="_blank"
+                    data-type="image"
+                    class="item-thumb buttonImage"
+                  >
+                    <img
+                      class="rounded-2 theme border"
+                      [ngClass]="{
+                        'border-danger': productDetail.color === colorCurrent
+                      }"
+                      [src]="'https://backendqlshop-1.onrender.com/images/' + productDetail.image"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-6">
+              <p class="mx-2 mb-3">Kích cỡ</p>
+              <div class="d-inline" *ngFor="let productSize of productSizes">
+                <button
+                  class="border px-3 mx-2 size_button mt-2"
+                  [ngClass]="{ size_active: sizeCurrent === productSize._id }"
+                  (click)="chooseSize(productSize._id)"
+                  *ngIf="productSize.quantity > 0"
+                >
+                  {{ productSize.size }}
+                </button>
+                <button
+                  class="border px-3 mx-2"
+                  *ngIf="productSize.quantity <= 0"
+                  [disabled]="productSize.quantity <= 0"
+                >
+                  {{ productSize.size }}
+                </button>
+              </div>
+              <span *ngIf = "!productSizes" class = "text-danger">Sản phẩm chưa có kích cỡ</span>
+              <br />
+              <span class="text-danger" *ngIf="!isSize"
+                >Vui lòng chọn size</span
+              >
+            </div>
+            <!-- col.// -->
+            <div class="col-md-4 col-6 mb-3">
+              <label class="mb-2 d-block">Số lượng</label>
+              <div class="input-group mb-3" style="width: 170px">
+                <button
+                  class="btn btn-white border border-secondary px-3"
+                  type="button"
+                  id="button-addon1"
+                  data-mdb-ripple-color="dark"
+                  (click)="decreaseQuantity()"
+                >
+                  <i class="zmdi zmdi-chevron-down"></i>
+                </button>
+                <input
+                  type="text"
+                  class="form-control text-center border border-secondary"
+                  [(ngModel)]="quantityCurrent"
+                  aria-label="Example text with button addon"
+                  aria-describedby="button-addon1"
+                />
+                <button
+                  class="btn btn-white border border-secondary px-3"
+                  type="button"
+                  id="button-addon2"
+                  data-mdb-ripple-color="dark"
+                  (click)="increaseQuantity()"
+                >
+                  <i class="zmdi zmdi-chevron-up"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <a (click)="makePayment()" class="btn btn-warning shadow-0">
+            Mua hàng
+          </a>
+          <button
+            (click)="
+              addToCart(
+                product._id,
+                idDetailCurrent,
+                sizeCurrent,
+                product.price - product.price * (product.sale / 100)
+              )
+            "
+            style="margin: 0 10px"
+            class="btn btn-primary shadow-0"
+          >
+            <i class="me-1 fa fa-shopping-basket"></i> Thêm vào giỏ hàng
+          </button>
+          <a
+            (click)="shareUrl()"
+            class="btn btn-light border border-secondary py-2 icon-hover px-3 share"
+          >
+            <i class="zmdi zmdi-share"></i>
+            Chia sẻ
+          </a>
+        </div>
+        <div class="d-flex flex-wrap flex-column address mt-3">
+          <div *ngIf="addresses.length > 0" class = "active-desktop">
+            <select class="form-select mb-3" [(ngModel)]="selectedAddress">
+              <option value="" selected>--Chọn địa chỉ giao hàng</option>
+              <option  *ngFor="let address of addresses" [value]="address._id">
+                <span> {{ address.name }} - <span class = "active-text">{{ address.phone }}</span>
+                 {{ address.detailAddress + ", " + address.city + ", " + address.district + ", " + address.ward }}</span>
+               </option>
+            </select>
+          </div>
+          <div *ngIf="addresses.length > 0" class = "active-mobile">
+            <select class="form-select mb-3" [(ngModel)]="selectedAddress">
+              <option value="" selected>--Chọn địa chỉ giao hàng</option>
+              <option  *ngFor="let address of addresses" [value]="address._id">
+                <span> {{ address.name }} - {{ address.phone }}
+                 </span>
+               </option>
+            </select>
+          </div>
+          <a
+            [routerLink]="['/profile']"
+            [queryParams]="{ address: 'true' }"
+            class="btn btn-dark text-white py-2"
+            >Thêm địa chỉ giao hàng</a
+          >
+        </div>
+
+      </main>
+    </div>
+  </div>
+</section>
+<!-- content -->
+
+<section class="bg-light border-top py-4">
+  <div class="container">
+    <div class="row gx-4">
+      <div class="col-lg-4 similar_item">
+        <div class="px-0 border rounded-2 shadow-0">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sản phẩm tương tự</h5>
+              <div class="product_item">
+                <div class="row isotope-grid">
+                  <div
+                    class="col-6 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women"
+                    *ngFor="let product of similarProduct"
+                  >
+                    <app-product [product]="product"></app-product>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container mt-5 comment">
+  <div class="row d-flex justify-content-center comment">
+    <div class="col-md-8">
+      <div
+        class="headings d-flex justify-content-between align-items-center mb-3"
+      >
+        <h5>Bình luận({{ this.comments.length }})</h5>
+      </div>
+
+      <div class="card p-3 my-3" *ngFor="let comment of comments; index as i">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="user d-flex flex-row align-items-center">
+            <i class="zmdi zmdi-account-circle" style="font-size: 25px"></i>
+            <span
+              ><small class="font-weight-bold text-primary mx-2">{{
+                comment.name
+              }}</small>
+              <small class="font-weight-bold">{{
+                comment.content
+              }}</small></span
+            >
+          </div>
+
+          <small>{{ hour[i] }}</small>
+        </div>
+
+        <div
+          class="action d-flex justify-content-between mt-2 align-items-center"
+        >
+          <div class="reply px-4">
+            <a
+              (click)="removeComment(i)"
+              class="user-select-none pointer button-comment"
+              *ngIf="user && user.id === comment._idUser"
+              >Xoá</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <form *ngIf="isLogin" (ngSubmit)="postComment()" class="mt-2">
+        <div class="d-flex align-items-center">
+          <div class="form-group w-100">
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Nhập bình luận"
+              [(ngModel)]="message"
+              name="message"
+            />
+          </div>
+          <button type="submit" class="btn-submit btn btn-primary ml-3">
+            Gửi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

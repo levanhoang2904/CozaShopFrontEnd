@@ -1,0 +1,333 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <div class="main" id="main">
+    <div class="pagetitle">
+      <h2
+        style="
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 40px;
+        "
+      >
+        Tạo đơn hàng mới
+
+        <a
+          [routerLink]="['/admin/order']"
+          style="
+            padding: 7px 18px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+          "
+          class="btn btn-sm btn-info"
+          >Quay lại</a
+        >
+      </h2>
+
+      <div class="d-flex flex-wrap">
+        <div style="width: 200px">
+          <select matNativeControl matInput (change)="onDeviceSelectChange($event)">
+            <option value="" [selected]="!currentDevice">No Device Selected</option>
+            <option *ngFor="let device of availableDevices" [value]="device.deviceId"
+              [selected]="currentDevice && device.deviceId === currentDevice.deviceId">{{device.label}}</option>
+          </select>
+          <zxing-scanner
+            [formats]="formatsEnabled"
+            (scanSuccess)="onCodeResult($event)"
+            (camerasFound)="onCamerasFound($event)"
+             [(device)]="currentDevice"
+          ></zxing-scanner>
+          <div></div>
+        </div>
+        <div class="card mx-2">
+          <div class="d-flex flex-column cart">
+            <div class="title">
+              <div class="row">
+                <div class="col flex-grow-1">
+                  <h4><b>Giỏ hàng</b></h4>
+                </div>
+
+                <span class="col align-self-center text-end text-muted">
+                  {{ listProduct.length }} sản phẩm
+                </span>
+              </div>
+            </div>
+            <ng-container *ngIf="listProduct">
+              <div class="item-height">
+                <div
+                  class="border-top border-bottom"
+                  *ngFor="let item of listProduct; let i = index"
+                >
+                  <div class="row main align-items-center">
+                    <div class="col-2">
+                      <img
+                        class="img-fluid"
+                        [src]="'https://backendqlshop-1.onrender.com/images/' + item.data.path"
+                      />
+                    </div>
+                    <div class="col">
+                      <div
+                        class="d-flex gap-3 align-items-center flex-wrap mb-3"
+                      >
+                        <p>{{ item.data.name }}</p>
+                      </div>
+                      <div
+                        class="d-flex justify-content-between flex-wrap row-gap-2 align-items-center"
+                      >
+                        <div
+                          class="d-flex align-items-center flex-wrap gap-2 flex-grow-1"
+                        >
+                          <div class="text-muted border-item">
+                            {{ item.data.details[0].color }}
+                          </div>
+                          <div class="text-muted border-item">
+                            {{ item.data.details[0].sizes[0].size }}
+                          </div>
+                          <div
+                            class="text-muted border-item text-sale"
+                            *ngIf="item.data.sale > 0"
+                          >
+                            -{{ item.data.sale }}%
+                          </div>
+                        </div>
+                        <div
+                          class="d-flex align-items-center flex-wrap column-gap-5 row-gap-3"
+                        >
+                          <div class="qty">
+                            <button
+                              type="button"
+                              class="qty-btn"
+                              (click)="
+                                editItemCart(
+                                  item.data.details[0].sizes[0]._id,
+                                  '-'
+                                )
+                              "
+                              [disabled]="item.quantity === 1"
+                            >
+                              -
+                            </button>
+                            <input
+                              type="text"
+                              class="qty-btn line-item-qty"
+                              [value]="item.quantity"
+                            />
+                            <button
+                              type="button"
+                              class="qty-btn"
+                              (click)="
+                                editItemCart(
+                                  item.data.details[0].sizes[0]._id,
+                                  '+'
+                                )
+                              "
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div
+                            class="text-end flex-grow-1 d-flex justify-content-between align-items-center"
+                          >
+                            <span class="item-price" *ngIf="item.data.sale > 0">
+                              <span
+                                style="
+                                  color: grey;
+                                  text-decoration: line-through;
+                                "
+                                >{{ item.data.price }}</span
+                              >
+                              {{
+                                item.data.price -
+                                  (item.data.price * item.data.sale) / 100
+                              }}
+                            </span>
+                            <span
+                              class="item-price"
+                              *ngIf="item.data.sale === 0"
+                            >
+                              {{ item.data.price }}
+                            </span>
+                            <button
+                              class="close btn-icon"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal1"
+                              (click)="confirmDeleteOne(i)"
+                            >
+                              <i class="zmdi zmdi-delete"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #notFound>
+              <div>
+                <p class="text-center fw-bold">Bạn chưa chọn sản phẩm nào!!!</p>
+              </div>
+            </ng-template>
+            <div class="d-flex justify-content-end flex-wrap mt-3">
+              <div
+              class="btn-action btn-red"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal2"
+              [ngClass]="{ disabled: listProduct.length === 0 }"
+            >
+              <button
+                class="text-muted"
+                [disabled]="listProduct.length === 0"
+              >
+                Xoá giỏ hàng
+              </button>
+            </div>
+            </div>
+            
+          </div>
+          <div class="summary">
+            <div class="d-flex align-items-center justify-content-between">
+              <h5><b>Tổng tiền:</b></h5>
+              <div class="text-end item-price">{{ total }} VND</div>
+            </div>
+            <button
+              class="btn-pay"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal3"
+              [disabled]="listProduct.length === 0"
+            >
+              Xác nhận đã thanh toán
+            </button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="exampleModal1"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" style="margin-top: 140px">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ của bạn?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="deleteOne()"
+              data-bs-dismiss="modal"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="exampleModal2"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" style="margin-top: 140px">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Bạn có chắc chắn muốn xóa giỏ hàng của bạn?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="clearCart()"
+              data-bs-dismiss="modal"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="exampleModal3"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" style="margin-top: 140px">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Xác nhận khách đã thanh toán?
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Bán có chắc chắn đã nhận tiền của khách chưa
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="makePayment()"
+              data-bs-dismiss="modal"
+            >
+              Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

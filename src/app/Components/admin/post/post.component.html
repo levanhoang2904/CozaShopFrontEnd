@@ -1,0 +1,180 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h3>Quản lý bài viết</h3>
+      <nav class="mt-3 d-flex">
+        <div class="box box-primary w-full">
+          <div class="box-body">
+            <div class="row row-gap-2 justify-content-between">
+              <div class="col-sm-9">
+                <div class="row row-gap-2 align-items-center">
+                  <div class="col-sm-4">
+                    <select
+                      class="form-control"
+                      [(ngModel)]="categorySelect"
+                      (change)="changeCategory()"
+                    >
+                      <option value="">--Danh mục bài viết (Tất cả)--</option>
+                      <option
+                        [value]="category._id"
+                        *ngFor="let category of categories"
+                      >
+                        {{ category.namecategory }}
+                      </option>
+                    </select>
+                  </div>
+                  <!--Form nhập dữ liệu vào tìm kiếm-->
+                  <div class="col-sm-8">
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Nhập tiêu đề hoặc mô tả của bài viết"
+                        [(ngModel)]="searchModel"
+                        (keyup.enter)="searchPost()"
+                      />
+                      <div class="input-group-btn">
+                        <button class="btn btn-default" (click)="searchPost()">
+                          <i class="zmdi zmdi-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3 d-flex justify-content-end">
+                <a
+                  [routerLink]="['/admin/form-post']"
+                  class="btn btn-primary"
+                  style="margin-left: 5px"
+                >
+                  <i class="fa fa-plus"></i> Bổ sung
+                </a>
+              </div>
+            </div>
+
+            <div id="searchResult" class="mt-3">
+              <p *ngIf="isSearch" class="mb-3">
+                <strong>Kết quả tìm kiếm:</strong> {{ searchModel }}
+              </p>
+              <ng-container *ngIf="posts.length; else notFound">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                      <tr class="bg-primary">
+                        <th>Ảnh</th>
+                        <th class="table-title title-table">Tiêu đề</th>
+                        <th class="title-table">Chủ đề</th>
+                        <th class="title-table">Ngày tạo</th>
+                        <th class="title-table" style="width: 100px">
+                          Công cụ
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let post of posts">
+                        <td style="width: 80px">
+                          <img
+                            [src]="
+                              'https://backendqlshop-1.onrender.com/post/' + post.thumbnail
+                            "
+                            class="img-fluid"
+                            alt="img-blog"
+                          />
+                        </td>
+                        <td class="table-title">
+                          {{ post.title }}
+                        </td>
+                        <td>{{ post.category.namecategory }}</td>
+                        <td>{{ post.createDate | date : "dd-MM-yyyy" }}</td>
+                        <td class="text-right">
+                          <a
+                            [routerLink]="['/admin/form-post']"
+                            [queryParams]="{ id: post._id }"
+                            class="btn btn-xs btn-info me-2"
+                          >
+                            <i class="zmdi zmdi-edit"></i>
+                          </a>
+                          <span
+                            class="btn btn-xs btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal2"
+                            (click)="setCurrentIdPost(post._id)"
+                          >
+                            <i class="zmdi zmdi-delete"></i>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="text-center">
+                  <ul class="flex-c-m flex-w w-full p-t-16">
+                    <li *ngFor="let page of pageCount">
+                      <a
+                        [ngClass]="{
+                          'active-pagination1': pageCurrent === page
+                        }"
+                        class="flex-c-m how-pagination1 page trans-04 m-all-7"
+                        (click)="setPageCurrent(page)"
+                      >
+                        {{ page }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </ng-container>
+              <ng-template #notFound>
+                <div class="p-t-38">
+                  <p class="text-center fw-bold">Không có bài viết nào!!!</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal2"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Bạn có chắc chắn muốn bài viết này?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="deletePost()"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

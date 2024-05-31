@@ -1,0 +1,112 @@
+<div class="body" [ngClass]="{ 'toggle-sidebar': isActive }">
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          [routerLink]="['/admin']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <i class="zmdi zmdi-home"></i>
+          <span>Trang chủ</span>
+        </a>
+      </li>
+      <!-- End Profile Page Nav -->
+      <li class="nav-item">
+        <a
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          [routerLink]="['/admin/category']"
+          routerLinkActive="active"
+        >
+          <i class="zmdi zmdi-storage"></i>
+          <span>Quản lý loại sản phẩm</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/admin/product']"
+          routerLinkActive="active"
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="bi bi-journal-text icon-category"></i
+          ><span>Quản lý sản phẩm</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/admin/user']"
+          routerLinkActive="active"
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="zmdi zmdi-account"></i><span>Quản lý người dùng</span>
+        </a>
+      </li>
+      <li class="nav-item" routerLinkActive="'active'">
+        <a
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          routerLink="/admin/post"
+          routerLinkActive="active"
+        >
+          <i class="zmdi zmdi-blogger"></i>
+          <span>Quản lý bài viết </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/admin/order']"
+          routerLinkActive="active"
+          class="nav-link collapsed"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="zmdi zmdi-assignment-check"></i>
+          <span>Quản lý đặt hàng </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link collapsed"
+          routerLinkActive="active"
+          data-bs-target="#tables-nav"
+          data-bs-toggle="collapse"
+          href="#"
+        >
+          <i class="bi bi-bar-chart-fill"></i><span>Thống kê</span
+          ><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul
+          id="tables-nav"
+          class="nav-content collapse"
+          data-bs-parent="#sidebar-nav"
+        >
+          <li>
+            <a [routerLink]="['/admin/statistics-renevue']" routerLinkActive="active">
+              <i class="bi bi-circle"></i><span>Thống kê doanh thu</span>
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/admin/statistics']" routerLinkActive="active">
+              <i class="bi bi-circle"></i><span>Thống kê sản phẩm</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link collapsed w-full" (click)="logout()">
+          <i class="bi bi-person"></i>
+          <span>Đăng xuất</span>
+        </button>
+      </li>
+    </ul>
+  </aside>
+  <!-- End Sidebar-->
+</div>

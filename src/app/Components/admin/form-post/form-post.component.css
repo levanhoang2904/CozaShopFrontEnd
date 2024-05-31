@@ -1,0 +1,32 @@
+.main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+  min-height: 100%;
+  background-color: #f6f9ff;
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 300px;
+}
+
+.font-validated {
+  font-size: 12px;
+}
+
+.img-cover {
+  border-radius: 6px;
+}
+
+@media (max-width: 1199px) {
+  .main {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .main,
+  .footer {
+    margin-left: 300px;
+  }
+}

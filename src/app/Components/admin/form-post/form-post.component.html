@@ -1,0 +1,122 @@
+<main id="main" class="main">
+  <div class="box box-primary m-auto">
+    <div class="box-header with-border mb-3">
+      <h3 class="box-title">Thông tin bài viết</h3>
+    </div>
+
+    <div class="box-body">
+      <form
+        class="form-horizontal"
+        method="post"
+        enctype="multipart/form-data"
+        [formGroup]="formSubmit"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="form-group mb-3">
+          <label class="control-label mb-3 col-sm-2">Tiêu đề:</label>
+          <div class="col-sm-12">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="title"
+              [value]="post ? post.title : ''"
+              autofocus
+            />
+            <div
+              *ngIf="formSubmit.controls?.['title']?.invalid  && (isFormSubmitted ||formSubmit.controls?.['title']?.touched || formSubmit.controls?.['title']?.dirty)"
+              class="text-danger mt-1 font-validated"
+            >
+              <span
+                *ngIf="formSubmit.controls?.['title']?.errors?.['required']"
+              >
+                (*)Vui lòng nhập tiêu đề bài viết!
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label class="control-label mb-3 col-sm-2">Loại chủ đề:</label>
+          <div class="col-sm-12">
+            <select class="form-control" formControlName="category">
+              <option value="">-- Loại chủ đề --</option>
+              <option
+                [value]="category._id"
+                [selected]="
+                  post && post.category._id === category._id ? true : false
+                "
+                *ngFor="let category of categories"
+              >
+                {{ category.namecategory }}
+              </option>
+            </select>
+            <div
+              *ngIf="formSubmit.controls?.['category']?.invalid  && isFormSubmitted"
+              class="text-danger mt-1 font-validated"
+            >
+              <span
+                *ngIf="formSubmit.controls?.['category']?.errors?.['required']"
+              >
+                (*)Vui lòng nhập chọn chủ đề bài viết!
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label class="control-label mb-3 col-sm-2">Ảnh minh họa:</label>
+          <div class="col-sm-12">
+            <input type="hidden" name="photo" value="" />
+            <input
+              type="file"
+              class="form-control"
+              name="thumbnail"
+              (change)="onChangeImg($event)"
+            />
+            <div
+              *ngIf="img === '' && !post && isFormSubmitted"
+              class="text-danger mt-1 font-validated"
+            >
+              <span> (*)Vui lòng nhập chọn chủ đề bài viết! </span>
+            </div>
+            <img *ngIf="img" [src]="img" class="w-25 mt-3 img-cover" />
+            <img
+              *ngIf="img === '' && post"
+              [src]="'https://backendqlshop-1.onrender.com/post/' + post.thumbnail"
+              class="w-25 mt-3 img-cover"
+            />
+          </div>
+        </div>
+        <div class="form-group mb-4">
+          <label for="description" class="control-label mb-3 col-sm-2">
+            Mô tả:
+          </label>
+          <ckeditor
+            [config]="{ placeholder: 'Nhập nội dùng bài viết...' }"
+            [editor]="Editor"
+            (ready)="onReady($event)"
+            formControlName="description"
+          ></ckeditor>
+          <div
+            *ngIf="formSubmit.controls?.['description']?.invalid  && (isFormSubmitted ||formSubmit.controls?.['description']?.touched || formSubmit.controls?.['description']?.dirty)"
+            class="text-danger mt-1 font-validated"
+          >
+            <span
+              *ngIf="formSubmit.controls?.['description']?.errors?.['required']"
+            >
+              (*)Vui lòng nhập nội dung cho bài viết!
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-12">
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-save"></i> Lưu dữ liệu
+            </button>
+            <a class="btn btn-default" [routerLink]="['/admin/post']">
+              Quay lại
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

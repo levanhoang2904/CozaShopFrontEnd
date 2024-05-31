@@ -1,0 +1,60 @@
+<div
+  class="img js-fullheight"
+  style="background-image: url(../../../assets/images/bg.jpg)"
+>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section">COZA STORE</h2>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <div class="login-wrap p-0">
+            <h3 class="mb-4 text-center">Quên mật khẩu?</h3>
+            <form
+              class="signin-form"
+              [formGroup]="formData"
+              (submit)="onSubmit()"
+            >
+              <div class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  [ngClass]="{ 'form-control__error': isError }"
+                  placeholder="Nhập OTP"
+                  formControlName="OTP"
+                  (keyup)="onChange()"
+                  required
+                />
+                <div
+                  *ngIf="formData.controls?.['OTP']?.invalid  && (isFormSubmitted ||formData.controls?.['OTP']?.touched || formData.controls?.['OTP']?.dirty)"
+                  class="text-danger d-flex gap-2 ml-2"
+                >
+                  <span *ngIf="formData.controls?.['OTP']?.errors?.['required']"
+                    >Vui lòng nhập OTP!</span
+                  >
+                </div>
+              </div>
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                  [disabled]="isLoading"
+                >
+                  {{ isLoading ? "Loading..." : "Xác nhận" }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+</div>

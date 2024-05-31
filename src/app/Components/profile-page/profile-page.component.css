@@ -1,0 +1,69 @@
+.container {
+  margin-top: 140px;
+  min-height: 640px;
+}
+
+.hidden {
+  display: none;
+} 
+
+.titlebaby {
+  margin-top: 20px;
+  color: black;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.imgproduct {
+  width: 100px;
+  border-radius: 10px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+
+.status-info {
+  flex: 1;
+}
+
+.created-date {
+  font-weight: bold;
+}
+
+.status-name {
+  margin-top: 5px;
+}
+
+.status-code {
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.map-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  right: 0;
+  bottom: 0;
+  height: 600px;
+}
+
+.map-frame {
+  border: 1px solid black;
+  height: 600px;
+}
+
+#map {
+  height: 600px;
+}
+.m-all-7{
+  text-decoration: none;
+  cursor: pointer;
+}

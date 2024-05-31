@@ -1,0 +1,667 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <div class="main" id="main">
+    <div class="pagetitle">
+      <div class="box-header text-right">
+        <div class="headerStatus">
+          <div class="custom-dropdown" *ngIf="order && order.status == 1">
+            <span class="dropdown-label">Cập nhật trạng thái</span>
+            <ul class="dropdown-menu">
+              <li
+                data-value="2"
+                class="dropdown-option"
+                (click)="confirmAndSetStatus(2)"
+                data-bs-toggle="modal"
+                data-bs-target="#modelComfimStatus"
+              >
+                Đã đóng hàng
+              </li>
+              <li
+                data-value="5"
+                class="dropdown-option"
+                style="border-top: 1px solid gainsboro"
+                (click)="confirmAndSetStatus(5)"
+                data-bs-toggle="modal"
+                data-bs-target="#modelComfimStatus"
+              >
+                Hủy đơn hàng
+              </li>
+            </ul>
+          </div>
+
+          <div
+            class="custom-dropdown"
+            *ngIf="order && order.status > 1 && order.status < 4"
+          >
+            <span class="dropdown-label">Cập nhật trạng thái</span>
+            <ul class="dropdown-menu">
+              <li
+                data-value="5"
+                class="dropdown-option"
+                data-bs-toggle="modal"
+                data-bs-target="#modelComfimStatus"
+                (click)="confirmAndSetStatus(5)"
+              >
+                Hủy đơn hàng
+              </li>
+            </ul>
+          </div>
+
+          <a
+            *ngIf="order && order.status <= 2 && order.status > 0"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="openModelUpdateAddress()"
+            class="btn btn-sm btn-secondary headerMid"
+            ><i class="fa fa-edit"></i> Thay đổi địa chỉ giao hàng</a
+          >
+
+          <a
+            *ngIf="order && order.status == 0"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModalVNPost"
+            class="btn btn-sm btn-secondary headerMid"
+            ><i class="fa fa-edit"></i> Thêm mã đơn hàng</a
+          >
+
+          <button
+            *ngIf="
+              (order && order.status === 4) || (order && order.status === 5)
+            "
+            style="margin-right: 20px"
+            (click)="confirmDeleteOrder(order._id)"
+            class="btn btn-xs btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal1"
+          >
+            <i class="zmdi zmdi-delete"></i>Xóa đơn hàng
+          </button>
+          <a
+            [routerLink]="['/admin/order']"
+            style="padding-top: 7px; color: white; font-weight: 600"
+            class="btn btn-sm btn-info"
+            >Quay lại</a
+          >
+        </div>
+      </div>
+
+      <div class="container" *ngIf="order?._idAddress">
+        <div class="card">
+          <div class="card-header">
+            <h5 style="font-weight: 600">Thông tin đơn hàng</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 col-12">
+                <div class="mb-3 d-flex">
+                  <label for="orderCode" class="form-label label2"
+                    >Mã đơn hàng:</label
+                  >
+                  <p class="form-control-static" id="orderCode">
+                    {{ order?.idOrderVNPost }}
+                  </p>
+                </div>
+                <div class="mb-3 d-flex">
+                  <label for="orderCreatedDate" class="form-label label2"
+                    >Ngày lập đơn hàng:</label
+                  >
+                  <p class="form-control-static" id="orderCreatedDate">
+                    {{ order?.createdAt | date : "dd/MM/yyyy HH:mm:ss" }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3 d-flex">
+                  <label for="employeeName" class="form-label label2"
+                    >Nhân viên phụ trách:</label
+                  >
+                  <p class="form-control-static" id="employeeName">
+                    {{ order?.nameStaff }}
+                  </p>
+                </div>
+                <div class="mb-3 d-flex">
+                  <label for="orderCreatedDate" class="form-label label2"
+                    >Trạng thái:</label
+                  >
+                  <p
+                    class="form-control-static"
+                    id="orderCreatedDate"
+                    [ngClass]="{
+                      'status-1': order && order.status === 1,
+                      'status-2': order && order.status === 2,
+                      'status-3': order && order.status === 3,
+                      'status-4': order && order.status === 4,
+                      'status-5': order && order.status === 5,
+                      'status-0': order && order.status === 0
+                    }"
+                  >
+                    {{ getStatusDescription(order?.status) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3 d-flex">
+                  <label for="customerName" class="form-label label2"
+                    >Tên khách hàng:</label
+                  >
+                  <p class="form-control-static" id="customerName">
+                    {{ order?._idAddress.name }}
+                  </p>
+                </div>
+                <div class="mb-3 d-flex">
+                  <label for="deliveryAddress" class="form-label label2"
+                    >Địa chỉ giao hàng:</label
+                  >
+                  <p class="form-control-static" id="deliveryAddress">
+                    {{
+                      order?._idAddress.detailAddress +
+                        ", " +
+                        order?._idAddress.ward +
+                        ", " +
+                        order?._idAddress.district +
+                        ", " +
+                        order?._idAddress.city
+                    }}
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3 d-flex">
+                  <label for="customerPhone" class="form-label label2"
+                    >Điện thoại:</label
+                  >
+                  <p class="form-control-static" id="customerPhone">
+                    {{ order?._idAddress.phone }}
+                  </p>
+                </div>
+                <div class="mb-3 d-flex">
+                  <label for="customerPhone" class="form-label label2"
+                    >Ghi chú:</label
+                  >
+                  <p class="form-control-static" id="customerPhone">
+                    {{ order?._idAddress.note }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box-body">
+        <h4 style="margin: 20px; font-weight: 600">
+          Danh sách mặt hàng thuộc đơn hàng
+        </h4>
+        <div class="table-responsive" style="padding: 12px">
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <tr class="bg-primary">
+                <th class="title-table text-center">Ảnh</th>
+                <th class="title-table text-center">Tên hàng</th>
+                <th class="title-table text-center">Màu</th>
+                <th class="title-table text-center">Size</th>
+                <th class="title-table text-center">Số lượng</th>
+                <th class="title-table text-center">Giá</th>
+                <th class="title-table text-center">Thành tiền</th>
+                <th style="width: 80px" *ngIf="order && order.status == 1"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let orderDetail of order?._idOrderDetail; let i = index"
+              >
+                <td>
+                  <img
+                    style="height: 80px"
+                    [src]="
+                      'https://backendqlshop-1.onrender.com/images/' +
+                      orderDetail.idColor.image
+                    "
+                  />
+                </td>
+                <td>{{ orderDetail.idProduct.name }}</td>
+                <td class="text-center">{{ orderDetail.idColor.color }}</td>
+                <td class="text-center">{{ orderDetail.idSize.size }}</td>
+                <td class="text-center">{{ orderDetail.amount }}</td>
+                <td class="text-center">
+                  {{ NumberFormat(orderDetail.price) }}
+                </td>
+                <td class="text-center">
+                  {{ NumberFormat(orderDetail.price * orderDetail.amount) }}
+                </td>
+
+                <td class="text-right" *ngIf="order && order.status == 1">
+                  <a
+                    href="#"
+                    class="btn btn-xs btn-primary btn-modal"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModalProduct"
+                    (click)="
+                      getDetailProduct(
+                        orderDetail.idProduct._id,
+                        orderDetail.idColor.image,
+                        orderDetail.idColor.color,
+                        orderDetail.idSize.size,
+                        i
+                      )
+                    "
+                  >
+                    <i class="fa fa-edit"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="6" class="text-right">Tổng cộng:</th>
+                <th colspan="2" class="text-right text-danger">
+                  {{ NumberFormat(totalPrice) }}
+                </th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="addressForm" *ngIf="order?._idAddress" (ngSubmit)="onchangeAddress()">
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Cập nhật địa chỉ
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <div data-mdb-input-init class="form-outline mb-3 col-6">
+                <label class="form-label">Tên người nhận:</label>
+                <input
+                  type="text"
+                  class="form-control col-4"
+                  formControlName="name"
+                  [value]="order._idAddress.name"
+                />
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrorAddress.name }}
+                </span>
+              </div>
+
+              <div data-mdb-input-init class="form-outline mb-3 col-6">
+                <label class="form-label">Số điện thoại người nhận:</label>
+                <input
+                  type="text"
+                  class="form-control col-4"
+                  formControlName="phone"
+                  [value]="order._idAddress.phone"
+                />
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrorAddress.phone }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Name input -->
+            <div data-mdb-input-init class="form-outline mb-3">
+              <label class="form-label">Địa chỉ chi tiết:</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="detailAddress"
+                [value]="order._idAddress.detailAddress"
+              />
+              <span style="color: red; margin-left: 20px; font-size: 13px">
+                {{ formErrorAddress.detailAddress }}
+              </span>
+            </div>
+
+            <div>
+              <select
+                class="form-select"
+                (change)="onCityChange(true)"
+                formControlName="city"
+              >
+                <option value="">Chọn tỉnh thành</option>
+                <option *ngFor="let city of cities" [ngValue]="city.Name">
+                  {{ city.Name }}
+                </option>
+              </select>
+              <span
+                style="
+                  color: red;
+                  margin-left: 20px;
+                  font-size: 13px;
+                  margin-bottom: 15px;
+                "
+              >
+                {{ formErrorAddress.city }}
+              </span>
+
+              <select
+                class="form-select"
+                (change)="onDistrictChange(true)"
+                formControlName="district"
+              >
+                <option value="">Chọn quận huyện</option>
+                <option
+                  *ngFor="let district of districts"
+                  [ngValue]="district.Name"
+                >
+                  {{ district.Name }}
+                </option>
+              </select>
+              <span
+                style="
+                  color: red;
+                  margin-left: 20px;
+                  font-size: 13px;
+                  margin-bottom: 15px;
+                "
+              >
+                {{ formErrorAddress.district }}
+              </span>
+
+              <select class="form-select" formControlName="ward">
+                <option value="">Chọn phường xã</option>
+                <option *ngFor="let ward of wards" [ngValue]="ward.Name">
+                  {{ ward.Name }}
+                </option>
+              </select>
+              <span
+                style="
+                  color: red;
+                  margin-left: 20px;
+                  font-size: 13px;
+                  margin-bottom: 15px;
+                "
+              >
+                {{ formErrorAddress.ward }}
+              </span>
+            </div>
+
+            <!-- textarea input -->
+            <div data-mdb-input-init class="form-outline mb-4">
+              <label class="form-label">Ghi chú:</label>
+              <textarea
+                id="textarea3"
+                rows="3"
+                class="form-control"
+                formControlName="note"
+                [value]="order._idAddress.note"
+                placeholder="Thời gian bạn muốn nhận hàng, yêu cầu cho người giao hàng..."
+              ></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              #closeButton1
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="productForm" (ngSubmit)="onchangeProduct()">
+    <div
+      class="modal fade"
+      id="exampleModalProduct"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Cập nhật sản phẩm
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <div data-mdb-input-init class="form-outline mb-3 col-12">
+                <label class="form-label">Tên sản phẩm:</label>
+                <input
+                  readonly
+                  type="text"
+                  class="form-control col-4"
+                  [value]="detailProduct?.name"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">
+                <img
+                  style="height: 120px"
+                  [src]="
+                    'https://backendqlshop-1.onrender.com/images/' + productForm.value.image
+                  "
+                />
+              </div>
+
+              <div class="col-8">
+                Màu:
+                <select
+                  style="margin-bottom: 10px"
+                  class="form-select"
+                  formControlName="color"
+                  (change)="onChangeColor()"
+                >
+                  <option
+                    *ngFor="let color of detailProduct?.details"
+                    [ngValue]="color.color"
+                  >
+                    {{ color.color }}
+                  </option>
+                </select>
+                Size:
+                <select
+                  class="form-select"
+                  formControlName="size"
+                  (change)="onChangeIdSize()"
+                >
+                  <option *ngFor="let size of listSize" [ngValue]="size.size">
+                    {{ size.size }}
+                  </option>
+                </select>
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ errorSize }}
+                </span>
+
+                <!-- <div data-mdb-input-init class="form-outline mb-4">
+                Số lượng:
+                <input style="background-color: gray;" type="number" min="1" max="100" />
+              </div> -->
+              </div>
+            </div>
+
+            <!-- textarea input -->
+          </div>
+          <div class="modal-footer">
+            <button
+              #closeButton2
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div
+    class="modal fade"
+    id="exampleModalVNPost"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Thêm mã đơn hàng
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <div data-mdb-input-init class="form-outline mb-3 col-12">
+              <label class="form-label">Mã đơn hàng:</label>
+              <input
+                type="text"
+                class="form-control col-4"
+                maxlength="13"
+                [(ngModel)]="maDonHang"
+              />
+              <span
+                *ngIf="errorIdVNPost"
+                style="color: red; margin-left: 20px; font-size: 13px"
+              >
+                Mã đơn hàng không hợp lệ
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            #closeButton3
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button class="btn btn-primary" (click)="addIdVNPost()">
+            Cập nhật
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="exampleModal1"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm?</div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            (click)="deleteOrder()"
+            type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          >
+            Đồng ý
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="modelComfimStatus"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Cập nhật trạng thái
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          {{ informationStatus }}
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            (click)="UpdateStatus()"
+            type="button"
+            [ngClass]="
+              updateStatus === 2
+                ? 'btn btn-warning'
+                : ['btn btn-warning', ' btn btn-danger']
+            "
+            data-bs-dismiss="modal"
+          >
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

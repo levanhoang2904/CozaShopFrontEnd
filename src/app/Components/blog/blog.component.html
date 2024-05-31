@@ -1,0 +1,111 @@
+<div class="banner">
+  <div class="d-flex flex-column justify-content-center text-center p-2">
+    <h1 class="banner-title">Khám Phá Thế Giới Áo Quần</h1>
+    <h5 class="banner-span">
+      Đắm chìm trong không gian thú vị của xu hướng mới, bí quyết phối đồ và
+      những câu chuyện thú vị xoay quanh thế giới áo quần.
+    </h5>
+  </div>
+</div>
+<div class="container mt-5">
+  <div class="p-b-10">
+    <div class="d-flex justify-content-between align-items-center">
+      <h3 class="ltext-103 cl5 mb-3 fm-default fw-bold">Tin tức và xu hướng</h3>
+      <div class="form mb-3">
+        <i class="fa fa-search" (click)="searchPost()"></i>
+        <input
+          type="text"
+          class="form-control form-input"
+          placeholder="Tìm kiếm bài viết..."
+          [(ngModel)]="searchModel"
+          (keyup.enter)="searchPost()"
+        />
+      </div>
+    </div>
+    <div class="under-line"></div>
+  </div>
+  <div class="mb-5 mt-3">
+    <div class="form-mobile mb-3">
+      <i class="fa fa-search" (click)="searchPost()"></i>
+      <input
+        type="text"
+        class="form-control form-input"
+        placeholder="Tìm kiếm bài viết..."
+        [(ngModel)]="searchModel"
+        (keyup.enter)="searchPost()"
+      />
+    </div>
+    <p *ngIf="isSearch" class="mb-4">
+      <strong>Kết quả tìm kiếm:</strong> {{ searchModel }}
+    </p>
+    <ng-container *ngIf="blogs.length; else notFound">
+      <div class="row row-gap-3 mb-3">
+        <div class="col-lg-4 col-md-6 col-12" *ngFor="let blog of blogs">
+          <a [routerLink]="['/blog-detail']" [queryParams]="{ id: blog._id }">
+            <div class="blog-item">
+              <img [src]="'https://backendqlshop-1.onrender.com/post/' + blog.thumbnail" />
+              <div class="blog-item__content">
+                <div class="blog-item__title">
+                  <div class="d-flex justify-content-between">
+                    <div class="blog-item__topic">
+                      <span> Chủ đề</span
+                      ><span> {{ blog.category.namecategory }}</span>
+                    </div>
+                    <div class="create-date">
+                      {{ blog.createDate | date : "dd-MM-yyyy" }}
+                    </div>
+                  </div>
+                  <div class="title">
+                    {{ blog.title }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="text-center">
+        <ul class="flex-c-m flex-w w-full p-t-16">
+          <li *ngFor="let page of pageCount">
+            <a
+              [ngClass]="{
+                'active-pagination1': pageCurrent === page
+              }"
+              class="flex-c-m how-pagination1 page trans-04 m-all-7"
+              (click)="setPageCurrent(page)"
+            >
+              {{ page }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <ng-template #notFound>
+      <div class="p-t-38 not-found">
+        <p class="text-center fw-bold">Không có bài viết nào!!!</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="container-topic">
+    <h3 class="ltext-103 cl5 mb-3 fm-default fw-bold text-end">Chủ đề</h3>
+    <div class="under-line"></div>
+    <div class="list-topic mb-5 mt-4">
+      <div
+        class="topic-item"
+        [ngClass]="{ 'active-topic': categorySelect === '' }"
+        (click)="setCategory('')"
+      >
+        # Tất cả
+      </div>
+      <div
+        class="topic-item"
+        [ngClass]="{ 'active-topic': category._id === categorySelect }"
+        *ngFor="let category of categories"
+        (click)="setCategory(category._id)"
+      >
+        # {{ category.namecategory }}
+      </div>
+    </div>
+  </div>
+</div>

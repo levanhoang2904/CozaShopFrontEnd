@@ -1,0 +1,296 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Trang chủ</h1>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row row-gap-3">
+        <!-- Header side columns -->
+        <div class="col-lg-12 col-md-12 col-12" *ngIf="stats">
+          <div class="row">
+            <div class="col-xxl-7 col-xl-7 col-md-12">
+              <div class="row">
+                <!-- Sales Card -->
+                <div class="col-xxl-6 col-xl-6 col-md-6 col-12">
+                  <div class="card info-card sales-card">
+                    <div class="filter">
+                      <a class="icon" href="" data-bs-toggle="dropdown"
+                        ><i class="bi bi-three-dots"></i>
+                      </a>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+                      >
+                        <li class="dropdown-header text-start">
+                          <h6>Bộ Lọc</h6>
+                        </li>
+
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('order', 'Hôm nay')"
+                            >Hôm nay
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('order', 'Tháng hiện tại')"
+                            >Tháng hiện tại
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('order', 'Năm hiện tại')"
+                            >Năm hiện tại
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        Hoá đơn <span>| {{ selectedOrderOption }}</span>
+                      </h5>
+
+                      <div class="d-flex align-items-center">
+                        <div
+                          class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                        >
+                          <i class="bi bi-cart"></i>
+                        </div>
+                        <div class="ps-3">
+                          <h6>{{ stats.order.current }}</h6>
+                          <span
+                            class="small pt-1 fw-bold"
+                            [ngClass]="{
+                              'text-success': stats.order.growth >= 0,
+                              'text-danger': stats.order.growth < 0
+                            }"
+                          >
+                            {{
+                              stats.order.growth >= 0
+                                ? stats.order.growth
+                                : stats.order.growth * -1
+                            }}%
+                          </span>
+                          <span class="text-muted small pt-2 ps-1">
+                            {{
+                              stats.order.growth >= 0
+                                ? "tăng"
+                                : stats.order.growth < 0
+                                ? "giảm"
+                                : ""
+                            }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Sales Card -->
+
+                <!-- Customers Card -->
+                <div class="col-xxl-6 col-xl-6 col-md-6 col-12">
+                  <div class="card info-card customers-card">
+                    <div class="filter">
+                      <a class="icon" href="" data-bs-toggle="dropdown"
+                        ><i class="bi bi-three-dots"></i
+                      ></a>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+                      >
+                        <li class="dropdown-header text-start">
+                          <h6>Bộ lọc</h6>
+                        </li>
+
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('user', 'Hôm nay')"
+                            >Hôm nay
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('user', 'Tháng hiện tại')"
+                            >Tháng hiện tại
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="selectOption('user', 'Năm hiện tại')"
+                            >Năm hiện tại
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        Khách hàng <span>| {{ selectedUserOption }}</span>
+                      </h5>
+
+                      <div class="d-flex align-items-center">
+                        <div
+                          class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                        >
+                          <i class="bi bi-people"></i>
+                        </div>
+                        <div class="ps-3">
+                          <h6>{{ stats.user.current }}</h6>
+                          <span
+                            class="small pt-1 fw-bold"
+                            [ngClass]="{
+                              'text-success': stats.user.growth >= 0,
+                              'text-danger': stats.user.growth < 0
+                            }"
+                          >
+                            {{
+                              stats.user.growth >= 0
+                                ? stats.user.growth
+                                : stats.user.growth * -1
+                            }}%
+                          </span>
+                          <span class="text-muted small pt-2 ps-1">
+                            {{
+                              stats.user.growth >= 0
+                                ? "tăng"
+                                : stats.user.growth < 0
+                                ? "giảm"
+                                : ""
+                            }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Customers Card -->
+              </div>
+            </div>
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-5 col-xl-5 col-md-12">
+              <div class="card info-card revenue-card">
+                <div class="filter">
+                  <a class="icon" href="" data-bs-toggle="dropdown"
+                    ><i class="bi bi-three-dots"></i
+                  ></a>
+                  <ul
+                    class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+                  >
+                    <li class="dropdown-header text-start">
+                      <h6>Bộ lọc</h6>
+                    </li>
+
+                    <li>
+                      <span
+                        class="dropdown-item"
+                        (click)="selectOption('revenue', 'Hôm nay')"
+                        >Hôm nay
+                      </span>
+                    </li>
+                    <li>
+                      <span
+                        class="dropdown-item"
+                        (click)="selectOption('revenue', 'Tháng hiện tại')"
+                        >Tháng hiện tại
+                      </span>
+                    </li>
+                    <li>
+                      <span
+                        class="dropdown-item"
+                        (click)="selectOption('revenue', 'Năm hiện tại')"
+                        >Năm hiện tại
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">
+                    Doanh thu <span>| {{ selectedRevenueOption }}</span>
+                  </h5>
+
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="card-icon rounded-circle d-flex align-items-center justify-content-center"
+                    >
+                      <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>{{ covertPrice(stats.revenue.current) }}</h6>
+                      <span
+                        class="small pt-1 fw-bold"
+                        [ngClass]="{
+                          'text-success': stats.revenue.growth >= 0,
+                          'text-danger': stats.revenue.growth < 0
+                        }"
+                      >
+                        {{
+                          stats.revenue.growth >= 0
+                            ? stats.revenue.growth
+                            : stats.revenue.growth * -1
+                        }}%
+                      </span>
+                      <span class="text-muted small pt-2 ps-1">
+                        {{
+                          stats.revenue.growth >= 0
+                            ? "tăng"
+                            : stats.revenue.growth < 0
+                            ? "giảm"
+                            : ""
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Revenue Card -->
+          </div>
+        </div>
+        <!-- End Header side columns -->
+
+        <!-- Footer side columns -->
+        <div class="col-lg-12 col-md-12 col-12">
+          <div class="row row-gap-5">
+            <!-- Start Selling -->
+            <div class="col-xl-8 col-lg-8 col-md-12 col-12">
+              <div class="card max-height top-selling overflow-auto">
+                <div class="card-body pb-5">
+                  <h5 class="card-title">
+                    Hoá đơn được lập <span>| Trong tuần</span>
+                  </h5>
+                  <canvas id="canvasOrder">{{ chartOrderWeeky }}</canvas>
+                </div>
+              </div>
+            </div>
+            <!-- End Selling -->
+
+            <!-- Start Category Precent -->
+            <div class="col-xl-4 col-lg-4 col-md-6 col-12">
+              <div class="card max-height top-selling overflow-auto">
+                <div class="card-body pb-5">
+                  <h5 class="card-title">
+                    Thống kê loại sản phẩm <span>| Theo sản phẩm</span>
+                  </h5>
+                  <canvas id="canvas">{{ chartCategory }}</canvas>
+                </div>
+              </div>
+            </div>
+            <!-- End Category Precent -->
+          </div>
+        </div>
+
+        <!-- End Footer side columns -->
+      </div>
+    </section>
+  </main>
+  <!-- End #main -->
+</div>

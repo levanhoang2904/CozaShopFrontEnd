@@ -1,0 +1,30 @@
+html {
+  scroll-behavior: smooth;
+}
+.wrapper {
+  position: relative;
+}
+.footer-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.scroll-top-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 28px;
+  display: none;
+  background-color: #777777;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  width: 45px;
+  height: 45px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: pointer;
+}
+
+.scroll-top-btn.show {
+  display: block;
+}

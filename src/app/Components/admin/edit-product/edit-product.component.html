@@ -1,0 +1,676 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <div class="main" id="main">
+    <div class="box box-primary">
+      <div class="box-header with-border mb-3">
+        <h3 class="box-title">Thông tin mặt hàng</h3>
+      </div>
+
+      <div class="box-body">
+        <form
+          class="form-horizontal"
+          [formGroup]="formEdit"
+          (ngSubmit)="onSubmit()"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label class="control-label mb-3 col-sm-2">Tên mặt hàng:</label>
+            <div class="col-sm-12">
+              <input
+                type="text"
+                class="form-control mb-3"
+                autofocus
+                formControlName="name"
+                [value]="product ? product.name : ''"
+              />
+            </div>
+            <div>
+              <span
+                *ngIf="checkNull.isName && formEdit.get('name')?.errors?.['required']"
+                class="text-danger text-sm"
+                >Vui lòng nhập tên sản phẩm</span
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label mb-3 col-sm-2">Loại hàng:</label>
+            <div class="col-sm-12">
+              <select class="form-control mb-3" formControlName="categoryId">
+                <option value="">-- Loại hàng --</option>
+                <option
+                  [selected]="
+                    product && product.categoryId._id === category._id
+                  "
+                  [value]="category._id"
+                  *ngFor="let category of categories"
+                >
+                  {{ category.namecategory }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <span
+                *ngIf="checkNull.isCategory && formEdit.get('categoryId')?.errors?.['required']"
+                class="text-danger text-sm"
+                >Vui lòng chọn loại hàng
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label mb-3 col-sm-2">Loại vải:</label>
+            <div class="col-sm-12">
+              <input
+                type="text"
+                class="form-control mb-3"
+                formControlName="fabric"
+                [value]="product ? product.fabric : ''"
+              />
+            </div>
+            <div>
+              <span
+                *ngIf="checkNull.isFabric && formEdit.get('fabric')?.errors?.['required']"
+                class="text-danger text-sm"
+                >Vui lòng nhập loại vải
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label mb-3 col-sm-2">Giá hàng:</label>
+            <div class="col-sm-12">
+              <input
+                type="text"
+                class="form-control mb-3"
+                formControlName="price"
+              />
+            </div>
+            <div>
+              <span
+                *ngIf="checkNull.isPrice && formEdit.get('price')?.errors?.['required'] "
+                class="text-danger text-sm"
+                >Vui lòng nhập giá sản phẩm
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label mb-3 col-sm-2">Giảm giá:</label>
+            <div class="col-sm-12">
+              <input
+              
+                type="text"
+                class="form-control mb-3"
+                formControlName="sale"
+                [value]="product ? product.sale : 0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="control-label mb-3 col-sm-2">Ảnh minh họa:</label>
+            <div class="col-sm-12">
+              <input
+              #photo
+                type="file"
+                class="form-control"
+                name="uploadPhoto"
+                (change)="onChangeImg($event)"
+              />
+            </div>
+            <div>
+              <span *ngIf="checkNull.isPath" class="text-danger text-sm"
+                >Vui lòng chọn ảnh
+              </span>
+            </div>
+            <img *ngIf="img" [src]="img" class="w-25 mt-3 img-cover" />
+            <img
+              *ngIf="img === '' && product"
+              [src]="'https://backendqlshop-1.onrender.com/images/' + product.path"
+              class="w-25 mt-3 img-cover"
+            />
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-save"></i> Lưu dữ liệu
+              </button>
+              <a class="btn btn-default" [routerLink]="['/admin/product']">
+                Quay lại
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="border mt-3 mb-3"></div>
+    <div *ngIf="product" class="">
+      <div
+        class="with-border mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2"
+      >
+        <div class="d-flex flex-wrap gap-2">
+          <h3 class="box-title me-3">Thông tin màu sắc</h3>
+          <button
+            data-bs-toggle="modal"
+            data-bs-target="#updateColor"
+            class="btn btn-primary"
+            style="margin-left: 5px"
+          >
+            <i class="fa fa-plus"></i>
+            <span class="mx-2">Bổ sung màu sắc</span>
+          </button>
+        </div>
+        <button
+          *ngIf="idItemCurrent"
+          data-bs-toggle="modal"
+          data-bs-target="#updateSize"
+          class="btn btn-primary"
+          style="margin-left: 5px"
+        >
+          <i class="fa fa-plus"></i>
+          <span class="mx-2">Bổ sung kích cỡ</span>
+        </button>
+      </div>
+
+      <div
+        *ngIf="product.details.length > 0"
+        class="d-flex flex-wrap box box-primary"
+      >
+        <div class="tabe-responsive flex-fill">
+          <table class="table table-bordered table-hover table-striped">
+            <thead>
+              <tr class="bg-primary">
+                <th>Ảnh</th>
+                <th>Màu sắc</th>
+                <th style="width: 100px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let productDetail of product.details">
+                <td
+                  [ngClass]="{ active: idItemCurrent === productDetail._id }"
+                  style="width: 80px"
+                >
+                  <img
+                    [src]="
+                      'https://backendqlshop-1.onrender.com/images/' + productDetail.image
+                    "
+                    class="img-fluid"
+                  />
+                </td>
+                <td
+                  [ngClass]="{ active: idItemCurrent === productDetail._id }"
+                  (click)="
+                    getProductSize(
+                      productDetail.sizes,
+                      productDetail._id,
+                      productDetail.color
+                    )
+                  "
+                >
+                  {{ productDetail.color }}
+                </td>
+                <td
+                  [ngClass]="{ active: idItemCurrent === productDetail._id }"
+                  class="text-center"
+                >
+                  <a
+                    (click)="setProductColor(productDetail._id)"
+                    data-bs-toggle="modal"
+                    data-bs-target="#updateColor"
+                    class="btn btn-xs btn-info me-2"
+                  >
+                    <i class="zmdi zmdi-edit"></i>
+                  </a>
+
+                  <a
+                    class="btn btn-xs btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteColor"
+                    (click)="setIdColorProduct(productDetail._id)"
+                  >
+                    <i class="zmdi zmdi-delete"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tabe-responsive flex-fill">
+          <table class="table table-bordered table-hover table-striped">
+            <thead>
+              <tr class="bg-primary">
+                <th>Kích cỡ</th>
+                <th>Số lượng</th>
+                <th style="width: 100px">Công cụ</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="productSizes.length > 0 && idItemCurrent !== ''">
+              <tr *ngFor="let productSize of productSizes">
+                <td>
+                  {{ productSize.size }}
+                </td>
+                <td>{{ productSize.quantity }}</td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-xs btn-info me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#updateSize"
+                    (click)="setSizeProduct(productSize._id)"
+                  >
+                    <i class="zmdi zmdi-edit"></i>
+                  </a>
+
+                  <a
+                    class="btn btn-xs btn-danger"
+                    data-bs-toggle="modal"
+                    (click)="setIdSizeProduct(productSize._id)"
+                    data-bs-target="#deleteSize"
+                  >
+                    <i class="zmdi zmdi-delete"></i>
+                  </a>
+
+                  <a
+                    class="btn btn-xs btn-warning"
+                    data-bs-toggle="modal"
+                    (click)="
+                      setNameSizeBarCode(
+                        productSize._id,
+                        productSize.size,
+                        productSize.quantity
+                      )
+                    "
+                    data-bs-target="#barCode"
+                  >
+                    <i class="bi bi-upc"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="productSizes.length === 0 && idItemCurrent !== ''">
+              <tr>
+                <td colspan="3">Sản phẩm chưa có kích cỡ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div *ngIf="product.details.length === 0">
+        <span class="text-danger text-center">Sản phẩm chưa có màu sắc</span>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="updateColor"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              *ngIf="!productDetail"
+              class="modal-title"
+              id="exampleModalLabel"
+            >
+              Thêm màu sắc
+            </h5>
+            <h5
+              *ngIf="productDetail"
+              class="modal-title"
+              id="exampleModalLabel"
+            >
+              Chỉnh sửa màu sắc
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="resetProductEdit()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <label class="control-label mb-3 col-sm-4">Màu sắc: </label>
+
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control mb-3"
+                  [(ngModel)]="color"
+                />
+                <span *ngIf="!color && checkNull.isColor" class="text-danger"
+                  >Vui lòng nhập màu sắc</span
+                >
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="control-label mb-3 col-sm-4">Ảnh minh họa:</label>
+              <div class="col-sm-10">
+                <input
+                #photoInput
+                  type="file"
+                  class="form-control"
+                  name="photoColor"
+                  (change)="onChangeImgColor($event)"
+                />
+                <span
+                  *ngIf="!imgColor && checkNull.isImgColor"
+                  class="text-danger"
+                  >Vui lòng chọn ảnh</span
+                >
+              </div>
+              <img *ngIf="imgColor" [src]="imgColor" class="w-25 mt-3" />
+              <img
+                *ngIf="imgColor === '' && productDetail"
+                [src]="'https://backendqlshop-1.onrender.com/images/' + productDetail.image"
+                class="w-25 mt-3"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="resetProductEdit()"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="
+                productDetail
+                  ? updateProductDetail(productDetail._id)
+                  : updateProductDetail()
+              "
+              [attr.data-bs-dismiss]="
+                color && !checkNull.isImgColor ? 'modal' : null
+              "
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="deleteColor"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Bạn có chắc chắn muốn xóa màu sắc này?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="deleteColorProduct()"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="deleteSize"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Bạn có chắc chắn muốn xóa kích cỡ này?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="deleteSize()"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="updateSize"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              *ngIf="!productDetail"
+              class="modal-title"
+              id="exampleModalLabel"
+            >
+              Thêm kích cỡ
+            </h5>
+            <h5
+              *ngIf="productDetail"
+              class="modal-title"
+              id="exampleModalLabel"
+            >
+              Chỉnh sửa kích cỡ
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              (click)="resetProductEdit()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <label class="control-label mb-3 col-sm-4">Kích cỡ: </label>
+
+              <div class="col-sm-10">
+                <select [(ngModel)]="size" class="form-control">
+                  <option value="">-- Chọn kích cỡ --</option>
+                  <option [selected]="size === 'S'" value="S">S</option>
+                  <option [selected]="size === 'M'" value="M">M</option>
+                  <option [selected]="size === 'L'" value="L">L</option>
+                  <option [selected]="size === 'XL'" value="XL">XL</option>
+                  <option [selected]="size === 'XXL'" value="XXL">XXL</option>
+                </select>
+                <span *ngIf="!size && checkNull.isSize" class="text-danger"
+                  >Vui lòng nhập kích cỡ</span
+                >
+              </div>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="control-label mb-3 col-sm-4">Số lượng: </label>
+
+              <div class="col-sm-10">
+                <input
+                  type="number"
+                  class="form-control mb-3"
+                  [(ngModel)]="amount"
+                />
+
+                <span *ngIf="amount < 0" class="text-danger"
+                  >Vui lòng nhập số lớn hơn hoặc bằng 0</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              (click)="resetProductEdit()"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              [attr.data-bs-dismiss]="size ? 'modal' : null"
+              data-bs-dismiss="modal"
+              (click)="updateSize()"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="barCode"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+      *ngIf="product"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Mã vạch sản phẩm</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="printable">
+            <div
+              style="
+                padding: 20px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                page-break-after: always;
+                flex-direction: column;
+              "
+            >
+              <div
+                style="
+                  text-align: center;
+                  color: black;
+                  font-family: sans-serif;
+                  font-weight: 500;
+                "
+              >
+                <p style="margin: 0px">{{ product.name }}</p>
+                <ngx-barcode6
+                  [bc-format]="'CODE128'"
+                  [bc-value]="idSizeBarcode"
+                  [bc-display-value]="true"
+                  [bc-width]="2"
+                  [bc-height]="50"
+                  [bc-font-size]="14"
+                >
+                </ngx-barcode6>
+                <p style="margin: 0px">
+                  {{
+                    "Loại vải: " +
+                      product.fabric +
+                      " - Màu: " +
+                      colorBarcode +
+                      " - Size: " +
+                      sizeBarcode
+                  }}
+                </p>
+                <p style="margin: 0px">------------------------------------</p>
+                <p
+                  style="
+                    font-weight: 600;
+                    color: black;
+                    margin: 0px;
+                    margin-top: 10px;
+                  "
+                >
+                  Giá: {{ product!.price | number : "1.0-0" }} vnd
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div style="position: absolute; display: flex; left: 12px">
+              Số lượng:
+              <input
+                id="number"
+                type="number"
+                [(ngModel)]="quantityIn"
+                style="
+                  width: 20%;
+                  border: 1px solid gainsboro;
+                  margin-left: 5px;
+                "
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              data-bs-dismiss="modal"
+              (click)="inBarCode()"
+            >
+              In mã vạch
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

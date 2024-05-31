@@ -1,0 +1,104 @@
+<div
+  class="img js-fullheight"
+  style="background-image: url(../../../assets/images/bg.jpg)"
+>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center"></div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <div class="login-wrap p-0">
+            <h3 class="mb-4 text-center">Sign Up</h3>
+            <form
+              action="#"
+              class="signin-form"
+              [formGroup]="signupForm"
+              (ngSubmit)="onSubmit()"
+            >
+              <div class="form-group">
+                <input
+                  formControlName="name"
+                  type="text"
+                  class="form-control"
+                  placeholder="Your name"
+                  required
+                />
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrors.name }}
+                </span>
+              </div>
+              <div class="form-group">
+                <input
+                  formControlName="email"
+                  type="email"
+                  class="form-control"
+                  placeholder="Your Email"
+                  required
+                />
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrors.email }}
+                </span>
+              </div>
+              <div class="form-group">
+                <input
+                  formControlName="phone"
+                  type="text"
+                  class="form-control"
+                  placeholder="Your phone"
+                  required
+                />
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrors.phone }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <input
+                  formControlName="password"
+                  id="password-field"
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  required
+                />
+                <!-- <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> -->
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrors.password }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <input
+                  formControlName="confirmPassword"
+                  id="confirm-password-field"
+                  type="password"
+                  class="form-control"
+                  placeholder="Repeat Password"
+                  required
+                />
+                <!-- <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span> -->
+                <span style="color: red; margin-left: 20px; font-size: 13px">
+                  {{ formErrors.confirmPassword }}
+                </span>
+              </div>
+
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+</div>

@@ -1,0 +1,30 @@
+<section class="p-layout container">
+  <ng-container *ngIf="blog">
+    <h1 class="article-title">{{ blog.title }}</h1>
+    <div
+      class="header-tool d-flex justify-content-between align-items-center my-3"
+    >
+      <div class="topic-tool">
+        <div
+          class="topic-item"
+          (click)="setCategoryQueryString(blog.category._id)"
+        >
+          #{{ blog.category.namecategory }}
+        </div>
+        <div class="topic-description">{{ blog.category.note }}</div>
+      </div>
+      <div class="article-date">
+        {{ blog.createDate | date : "dd/MM/yyyy" }}
+      </div>
+    </div>
+    <div class="thumbnail">
+      <img
+        class="article-thumbnail"
+        [src]="'https://backendqlshop-1.onrender.com/post/' + blog.thumbnail"
+      />
+    </div>
+
+    <div class="article-content" [innerHtml]="blog.description"></div>
+    <div class="article-text__footer">That all~~~</div>
+  </ng-container>
+</section>

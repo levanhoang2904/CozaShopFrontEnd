@@ -1,0 +1,277 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <div class="main" id="main">
+    <div class="pagetitle">
+      <h1>Quản lý tài khoản</h1>
+      <div class="row justify-content-center">
+        <div class="col-sm-5">
+          <div class="input-group">
+            <input
+              name="searchValue"
+              type="text"
+              class="form-control"
+              placeholder="Nhập email hoặc số điện thoại tài khoản cần tìm"
+              [(ngModel)]="this.searchUserDto.searchValue"
+              (keyup.enter)="sendSearchQuery()"
+            />
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="zmdi zmdi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" style="margin-top: 20px">
+        <table class="table table-bordered table-hover table-striped">
+          <thead>
+            <tr class="bg-primary">
+              <th class="title-table">Họ tên</th>
+              <th class="title-table">Email</th>
+              <th class="title-table">Số điện thoại</th>
+              <th class="title-table">Quyền</th>
+              <th style="width: 100px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ user.role }}</td>
+
+              <td class="text-right">
+                <button
+                  style="margin-right: 10px"
+                  class="btn btn-xs btn-info"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModalProduct"
+                  (click)="
+                    getDetailUser(
+                      user._id,
+                      user.name,
+                      user.email,
+                      user.phone,
+                      user.role
+                    )
+                  "
+                >
+                  <i class="zmdi zmdi-edit"></i>
+                </button>
+                <button
+                  (click)="confirmDeleteOrder(user._id, user.email)"
+                  *ngIf="user.role === 'user'"
+                  class="btn btn-xs btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal1"
+                >
+                  <i class="zmdi zmdi-delete"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center">
+        <ul class="flex-c-m flex-w w-full p-t-38">
+          <li *ngFor="let page of pages">
+            <button
+              [ngClass]="{ 'active-pagination1': searchUserDto.page === page }"
+              class="flex-c-m how-pagination1 page trans-04 m-all-7"
+              (click)="setPageCurrent(page)"
+            >
+              {{ page }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onchangeUser()">
+    <div
+      class="modal fade"
+      id="exampleModalProduct"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" style="margin-top: 6%">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Thông tin chi tiết
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div data-mdb-input-init class="form-outline mb-3 col-12">
+              <label class="form-label">Họ tên:</label>
+              <input
+                readonly
+                type="text"
+                class="form-control col-4"
+                formControlName="name"
+              />
+              <span class="error"> {{ formErrorProfile.name }}</span>
+            </div>
+            <div data-mdb-input-init class="form-outline mb-3 col-12">
+              <label class="form-label">Email:</label>
+              <input
+                readonly
+                type="text"
+                class="form-control col-4"
+                formControlName="email"
+              />
+              <span class="error"> {{ formErrorProfile.email }}</span>
+            </div>
+            <div data-mdb-input-init class="form-outline mb-3 col-12">
+              <label class="form-label">Số điện thoại:</label>
+              <input
+                readonly
+                type="text"
+                class="form-control col-4"
+                formControlName="phone"
+              />
+              <span class="error"> {{ formErrorProfile.phone }}</span>
+            </div>
+
+            <div class="row">
+              <div class="col-8">
+                Quyền hạn:
+                <select class="form-select" formControlName="role">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <!-- 
+        <div data-mdb-input-init class="form-outline mb-3 col-12" style="margin-top:10px">
+        <a href="#" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Thay đổi mật khẩu</a>
+        
+        </div> -->
+
+            <!-- textarea input -->
+          </div>
+          <div class="modal-footer">
+            <button
+              #closeButton
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div
+    class="modal fade"
+    id="exampleModalToggle2"
+    aria-hidden="true"
+    aria-labelledby="exampleModalToggleLabel2"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">
+            Đổi mật khẩu
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div data-mdb-input-init class="form-outline mb-3 col-12">
+            <label class="form-label">Mật khẩu:</label>
+            <input
+              [(ngModel)]="passWord1"
+              type="text"
+              class="form-control col-4"
+            />
+            <span class="error"> {{ errorPass1 }}</span>
+          </div>
+          <div data-mdb-input-init class="form-outline mb-3 col-12">
+            <label class="form-label">Nhập lại mật khẩu:</label>
+            <input
+              [(ngModel)]="passWord2"
+              type="text"
+              class="form-control col-4"
+            />
+            <span class="error"> {{ errorPass2 }}</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            #closeButtonPass
+            data-bs-target="#exampleModalProduct"
+            data-bs-toggle="modal"
+          >
+            Quay lại
+          </button>
+
+          <button class="btn btn-primary" #closeButton (click)="changePass()">
+            Đổi mật khẩu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="exampleModal1"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa tài khoản {{ email }}?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            (click)="deleteUser()"
+            type="button"
+            class="btn btn-danger"
+            data-bs-dismiss="modal"
+          >
+            Đồng ý
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

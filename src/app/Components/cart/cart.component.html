@@ -1,0 +1,251 @@
+<section class="p-layout d-flex justify-content-around container">
+  <div class="card m-r-11">
+    <div class="d-flex flex-column cart">
+      <div class="title">
+        <div class="row">
+          <div class="col flex-grow-1">
+            <h4><b>Giỏ hàng</b></h4>
+          </div>
+
+          <span class="col align-self-center text-end text-muted">
+            {{ cart.length }} sản phẩm
+          </span>
+        </div>
+      </div>
+      <ng-container *ngIf="cart.length; else notFound">
+        <div class="item-height">
+          <div class="border-top border-bottom" *ngFor="let item of cart">
+            <div class="row main align-items-center">
+              <div class="col-2">
+                <img
+                  class="img-fluid"
+                  [src]="'https://backendqlshop-1.onrender.com/images/' + item.imgCover"
+                />
+              </div>
+              <div class="col">
+                <div class="d-flex gap-3 align-items-center flex-wrap mb-3">
+                  <p>{{ item.nameProduct }}</p>
+                </div>
+                <div
+                  class="d-flex justify-content-between flex-wrap row-gap-2 align-items-center"
+                >
+                  <div
+                    class="d-flex align-items-center flex-wrap gap-2 flex-grow-1"
+                  >
+                    <div class="text-muted border-item">{{ item.color }}</div>
+                    <div class="text-muted border-item">{{ item.size }}</div>
+                    <div
+                      class="text-muted border-item text-sale"
+                      *ngIf="item.sale > 0"
+                    >
+                      Giảm giá
+                    </div>
+                  </div>
+                  <div
+                    class="d-flex align-items-center flex-wrap column-gap-5 row-gap-3"
+                  >
+                    <div class="qty">
+                      <button
+                        type="button"
+                        class="qty-btn"
+                        (click)="editItemCart(item.id, 'decrement')"
+                        [disabled]="item.amount === 1"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        class="qty-btn line-item-qty"
+                        [value]="item.amount"
+                      />
+                      <button
+                        type="button"
+                        class="qty-btn"
+                        (click)="editItemCart(item.id, 'increment')"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div
+                      class="text-end flex-grow-1 d-flex justify-content-between align-items-center"
+                    >
+                      <span class="item-price" *ngIf="item.sale > 0">
+                        {{
+                          priceProductFormat(item.price, item.sale)
+                            
+                        }}
+                      </span>
+                      <span class="item-price" *ngIf="item.sale === 0">
+                        {{ priceProductFormat(item.price) }}
+                      </span>
+                      <button
+                        class="close btn-icon"
+                        (click)="setIdItem(item.id)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal1"
+                      >
+                        <i class="zmdi zmdi-delete"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #notFound>
+        <div>
+          <p class="text-center fw-bold">Bạn chưa chọn sản phẩm nào!!!</p>
+        </div>
+      </ng-template>
+      <div class="d-flex justify-content-between flex-wrap mt-3">
+        <a [routerLink]="['/']" class="btn-action">
+          &leftarrow;<span class="text-muted">Trở về trang chủ</span>
+        </a>
+        <div
+          class="btn-action btn-red"
+          [ngClass]="{ disabled: cart.length === 0 }"
+        >
+          <button
+            class="text-muted"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal2"
+            [disabled]="cart.length === 0"
+          >
+            Xoá giỏ hàng
+          </button>
+        </div>
+      </div>
+      <div class="address mt-5">
+        <h4 class = "mb-4"><b>Địa chỉ giao hàng</b></h4>
+        <div *ngIf="addresses.length > 0" class = "active-desktop">
+          <select class="form-select" [(ngModel)]="selectedAddress">
+            <option value=""  selected>--Chọn địa chỉ giao hàng</option>
+            <option  *ngFor="let address of addresses" [value]="address._id">
+             <span> {{ address.name }} - {{ address.phone }}
+              {{ address.detailAddress + ", " + address.city + ", " + address.district + ", " + address.ward }}</span>
+            </option>
+          </select>
+        </div>
+        <div *ngIf="addresses.length > 0" class = "active-mobile">
+          <select class="form-select mb-3" [(ngModel)]="selectedAddress">
+            <option value="" selected>--Chọn địa chỉ giao hàng</option>
+            <option  *ngFor="let address of addresses" [value]="address._id">
+              <span> {{ address.name }} - {{ address.phone }}
+               </span>
+             </option>
+          </select>
+        </div>
+        <a
+          [routerLink]="['/profile']"
+          [queryParams]="{ address: 'true' }"
+          class="btn btn-dark text-white py-2 w-full"
+          >Thêm địa chỉ giao hàng</a
+        >
+      </div>
+    </div>
+    <div class="summary">
+      <div class="d-flex align-items-center justify-content-between">
+        <h5><b>Tổng tiền:</b></h5>
+        <div class="text-end item-price">
+          {{ summaryPrice() | currency : "VND" : "symbol" }}
+        </div>
+      </div>
+      <button
+        (click)="makePayment()"
+        class="btn-pay"
+        [disabled]="cart.length === 0"
+        [ngClass]="{ disabled: cart.length === 0 }"
+      >
+        THANH TOÁN
+      </button>
+    </div>
+  </div>
+
+  
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal2"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" style="margin-top: 140px">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa giỏ hàng của bạn?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="clearCart()"
+            data-bs-dismiss="modal"
+          >
+            Đồng ý
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="exampleModal1"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" style="margin-top: 140px">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ của bạn?
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Đóng
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deleteItemCart(idItem)"
+            data-bs-dismiss="modal"
+          >
+            Đồng ý
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

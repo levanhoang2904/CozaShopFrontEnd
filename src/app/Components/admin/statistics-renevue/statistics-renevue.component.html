@@ -1,0 +1,53 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <div class="main" id="main">
+    <div class="pagetitle d-flex justify-content-between mb-5">
+      <h1>Thống kê doanh thu</h1>
+    </div>
+    <div class="card p-5">
+      <div
+        class="d-flex flex-wrap row-gap-2 justify-content-between align-items-center"
+      >
+        <div class="d-flex align-items-center">
+          <span class="fw-bold">Thống kê theo: </span>
+          <div class="custom-dropdown">
+            <span class="dropdown-label text-default text-center">{{
+              selected ? "Năm" : "Tuần"
+            }}</span>
+            <ul class="dropdown-menu">
+              <li (click)="setOption('week')" class="dropdown-option">Tuần</li>
+              <li (click)="setOption('year')" class="dropdown-option">Năm</li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-end d-flex">
+          <span
+            >Tổng doanh thu:
+            <span class="text-danger fw-bold">{{
+              formatPrice(totalRenevue)
+            }}</span>
+          </span>
+          <div class="custom-dropdown" *ngIf="selected === true">
+            <span class="dropdown-label text-default text-center"
+              ><span class="fw-bold">Năm</span> : {{ this.year }}</span
+            >
+            <ul class="dropdown-menu">
+              <li
+                (click)="setYear(i)"
+                class="dropdown-option"
+                *ngFor="let i of years"
+              >
+                {{ i }}
+              </li>
+              <!-- <li  class="dropdown-option" style="border-top: 1px solid gainsboro"
+                               >
+                                2022
+                            </li> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="canvas">{{ chart }}</canvas>
+    </div>
+  </div>
+</div>

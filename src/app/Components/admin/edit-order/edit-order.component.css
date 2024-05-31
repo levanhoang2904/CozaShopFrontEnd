@@ -1,0 +1,159 @@
+a {
+  text-decoration: none;
+}
+
+.main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+  min-height: 100vh;
+  height: 100%;
+  background-color: #f6f9ff;
+}
+
+.title-table {
+  white-space: nowrap;
+}
+
+@media (min-width: 1200px) {
+  .main,
+  .footer {
+    margin-left: 300px;
+  }
+}
+
+.pagetitle {
+  margin-bottom: 10px;
+}
+
+.status {
+  background-color: blue;
+}
+
+.headerStatus {
+  width: 100%;
+  padding: 0 12px;
+  margin-bottom: 20px;
+  justify-content: end;
+  display: flex;
+  row-gap: 5px;
+  flex-wrap: wrap;
+}
+
+.headerMid {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 7px;
+}
+
+.label2 {
+  font-weight: 600;
+  margin-right: 20px;
+  text-align: end;
+  min-width: 170px;
+}
+
+.status-1 {
+  background-color: orange;
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.status-2 {
+  background-color: yellow;
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.status-3 {
+  background-color: blue;
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.status-4 {
+  background-color: green;
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.status-5 {
+  background-color: red;
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.status-0 {
+  background-color: rgb(255, 0, 183);
+  color: white;
+  padding: 4px 10px;
+  display: inline;
+  border-radius: 10px;
+}
+
+.form-control-static {
+  word-break: break-all;
+}
+
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-label {
+  display: block;
+  padding: 6px 10px;
+  background: white;
+  border-radius: 5px;
+  background-color: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  width: 89%;
+  display: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.custom-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f9f9f9;
+}
+@media (min-width: 1200px) {
+  .toggle-sidebar #main,
+  .toggle-sidebar #footer {
+    margin-left: 0;
+  }
+
+  .toggle-sidebar .sidebar {
+    left: -300px;
+  }
+}

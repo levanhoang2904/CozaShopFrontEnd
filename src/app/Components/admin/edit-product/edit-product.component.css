@@ -1,0 +1,51 @@
+a {
+  text-decoration: none;
+}
+
+.main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+  background-color: #f6f9ff;
+  min-height: 100vh;
+  height: 100%;
+}
+.modal-barcode {
+  text-align: center;
+  color: black;
+  font-weight: 500;
+}
+
+.img-cover {
+  border-radius: 6px;
+}
+
+@media (max-width: 1199px) {
+  .main {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+
+  .main,
+  .footer {
+    margin-left: 300px;
+  }
+}
+
+.active {
+  background-color: rgba(136, 159, 193, 0.75);
+}
+
+@media (min-width: 1200px) {
+
+  .toggle-sidebar #main,
+  .toggle-sidebar #footer {
+    margin-left: 0;
+  }
+
+  .toggle-sidebar .sidebar {
+    left: -300px;
+  }
+}

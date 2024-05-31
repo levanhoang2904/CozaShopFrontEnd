@@ -1,0 +1,189 @@
+<div [ngClass]="{ 'toggle-sidebar': isActive }">
+  <main class="main" id="main">
+    <div class="pagetitle">
+      <h1>Quản lý sản phẩm</h1>
+      <nav class="mt-3 d-flex">
+        <div class="box box-primary w-full">
+          <div class="box-body">
+            <form id="formSearch" (submit)="onSubmit()">
+              <div class="row row-gap-2 justify-content-between">
+                <div class="col-lg-9 col-md-9 col-12">
+                  <div class="row row-gap-2 align-items-center">
+                    <div class="col-md-4 col-12">
+                      <select
+                        class="form-control"
+                        name="CategoryID"
+                        id="button"
+                        [(ngModel)]="selected"
+                        (change)="getProductFilter()"
+                      >
+                        <option value="">-- Loại hàng --</option>
+                        <option
+                          [selected]="selected === category._id"
+                          [value]="category._id"
+                          *ngFor="let category of categories"
+                        >
+                          {{ category.namecategory }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-8 col-12">
+                      <div class="input-group">
+                        <input
+                          name="searchValue"
+                          type="text"
+                          class="form-control"
+                          placeholder="Nhập tên của mặt hàng cần tìm"
+                          [(ngModel)]="searchInput"
+                        />
+                        <div class="input-group-btn">
+                          <button class="btn btn-default" type="submit">
+                            <i class="zmdi zmdi-search"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-12 d-flex justify-content-end">
+                  <a
+                    [routerLink]="['/admin/product/edit']"
+                    class="btn btn-primary"
+                    style="margin-left: 5px"
+                  >
+                    <i class="fa fa-plus"></i> Bổ sung
+                  </a>
+                </div>
+              </div>
+            </form>
+            <!--Hiển thị kết quả tìm kiếm-->
+            <div *ngIf="isSearch" class="mt-3">
+              <span>Kết quả tìm kiếm: {{ searchInput }}</span>
+            </div>
+            <div id="searchResult" class="mt-3">
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                  <thead>
+                    <tr class="bg-primary">
+                      <th class="title-table">Ảnh</th>
+                      <th class="title-table">Loại hàng</th>
+                      <th class="title-table">Tên mặt hàng</th>
+                      <th class="title-table">Tình trạng</th>
+                      <th class="title-table">Loại vải</th>
+                      <th class="title-table">Giá</th>
+                      <th style="width: 100px"></th>
+                    </tr>
+                  </thead>
+                  <tbody *ngIf="products">
+                    <tr *ngFor="let product of products; index as i">
+                      <td style="width: 80px">
+                        <img
+                          [src]="'https://backendqlshop-1.onrender.com/images/' + product.path"
+                          class="img-fluid"
+                        />
+                      </td>
+                      <td>{{ product.categoryId.namecategory }}</td>
+                      <td>
+                        {{ product.name }}
+                        <span
+                          *ngIf="product.sale > 0"
+                          class="bg-danger text-white px-2 rounded py-1"
+                          >{{ product.sale + "%" }}</span
+                        >
+                      </td>
+                      <td *ngIf="product.details.length === 0">Hết hàng</td>
+                      <td *ngIf="product.details.length > 0">
+                        {{ checkAmount(product.details) }}
+                      </td>
+                      <td>{{ product.fabric }}</td>
+                      <td>
+                        {{ product.price }}
+                      </td>
+                      <td lclass="text-right">
+                        <a
+                          [routerLink]="['/admin/product/edit']"
+                          [queryParams]="{ id: product._id }"
+                          class="btn btn-xs btn-info me-2"
+                        >
+                          <i class="zmdi zmdi-edit"></i>
+                        </a>
+                        <a
+                          (click)="setIdProduct(product._id, i)"
+                          class="btn btn-xs btn-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal1"
+                        >
+                          <i class="zmdi zmdi-delete"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div
+                  *ngIf="products.length === 0"
+                  class="text-danger py-2"
+                  class="text-center text-danger"
+                >
+                  Không có sản phẩm cần tìm kiếm!!!
+                </div>
+              </div>
+
+              <div class="text-center">
+                <ul class="flex-c-m flex-w w-full p-t-38">
+                  <li *ngFor="let page of pageCount">
+                    <a
+                      [ngClass]="{ 'active-pagination1': pageCurrent === page }"
+                      class="flex-c-m how-pagination1 page trans-04 m-all-7"
+                      (click)="setPageCurrent(page)"
+                    >
+                      {{ page }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div
+      class="modal fade"
+      id="exampleModal1"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Xác nhận xóa</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Bạn có chắc chắn muốn xóa sản phẩm?</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="deleteProduct()"
+              data-bs-dismiss="modal"
+            >
+              Đồng ý
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

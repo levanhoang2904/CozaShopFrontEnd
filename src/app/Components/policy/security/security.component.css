@@ -1,0 +1,58 @@
+.body{   
+    padding-top: 100px;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-bottom: 5%;
+    color: #272525
+
+}
+.navbar{
+    display:block
+}
+.navbar a{
+    text-decoration: none;
+    color:black
+}
+.navbar span{
+    font-weight: 500;
+    color: gray;
+}
+.title{
+    font-size: 28px;
+    margin: 20px 0px;
+}
+.privacy-policy {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.privacy-policy h2 {
+    font-size: 1.5em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.privacy-policy ul {
+    margin-bottom: 20px;
+}
+
+.privacy-policy ul li {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.privacy-policy address {
+    margin-bottom: 20px;
+}
+
+.privacy-policy address a {
+    color: #007bff;
+}
+@media (max-width: 768px) {
+    .body{   
+        padding-top: 50px;
+        padding-left: 2%;
+        padding-right: 2%;
+        padding-bottom: 5%;
+    }
+}

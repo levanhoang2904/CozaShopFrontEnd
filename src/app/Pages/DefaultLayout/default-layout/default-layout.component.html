@@ -1,0 +1,11 @@
+<app-header [name]="name" [user]="user"></app-header>
+<router-outlet></router-outlet>
+<button
+  id="btn-back-to-top"
+  (click)="backToTop()"
+  class="scroll-top-btn"
+  [ngClass]="{ show: showScroll }"
+>
+  <i class="bi bi-chevron-up"></i>
+</button>
+<app-footer></app-footer>
